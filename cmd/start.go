@@ -4,16 +4,13 @@ import (
 	"bufio"
 
 	"fmt"
+	"github.com/spf13/cobra"
+	"github.com/srikanth-karthi/timesheet/internal/setup"
 	"log"
 	"os"
 	"strings"
 	"time"
-
-	"github.com/spf13/cobra"
-	"github.com/srikanth-karthi/timesheet/internal/setup"
-
 	"google.golang.org/api/sheets/v4"
-
 	"github.com/srikanth-karthi/timesheet/internal"
 )
 
@@ -24,7 +21,7 @@ var startCmd = &cobra.Command{
 	Short: "Start tracking time",
 	Run: func(cmd *cobra.Command, args []string) {
 		if !internal.IsLoggedIn() {
-			fmt.Println("  Please run 'timesheet setup' first.")
+			fmt.Println("❌ Please run 'timesheet setup' first.")
 			os.Exit(1)
 		}
 		provider := setup.GetCredentialProvider()
@@ -47,24 +44,28 @@ var startCmd = &cobra.Command{
 				os.Exit(0)
 			}
 
-			//    Calculate duration and log hours
 			oldStartTime, err := time.Parse(time.RFC3339, meta.SessionStart)
 			if err != nil {
-				log.Fatalf("  Invalid session_start time: %v", err)
+				log.Fatalf("❌ Invalid session_start time: %v", err)
 			}
 
 			rowsResp, err := srv.Spreadsheets.Values.Get(spreadsheetID, userSheet+"!A5:G").Do()
 			if err != nil {
-				log.Fatalf("  Failed to read timesheet rows: %v", err)
+				log.Fatalf("❌ Failed to read timesheet rows: %v", err)
 			}
 
 			rowIndex := -1
 			for i, row := range rowsResp.Values {
-				if len(row) >= 6 {
-					ts := fmt.Sprintf("%v", row[5])
 
-					if ts == meta.SessionStart {
-						rowIndex = i + 5
+				if len(row) >= 6 {
+					tsRaw := fmt.Sprintf("%v", row[5])
+					parsedSheetTime, err1 := time.Parse(time.RFC3339, tsRaw)
+					parsedMetaTime, err2 := time.Parse(time.RFC3339, meta.SessionStart)
+					if err1 != nil || err2 != nil {
+						continue
+					}
+					if parsedSheetTime.Equal(parsedMetaTime) {
+						rowIndex = i + 3 // sheet starts from A3
 						break
 					}
 				}
@@ -80,7 +81,7 @@ var startCmd = &cobra.Command{
 					Values: [][]interface{}{{hours}},
 				}).ValueInputOption("USER_ENTERED").Do()
 				if err != nil {
-					log.Fatalf("  Failed to update hours: %v", err)
+					log.Fatalf("❌ Failed to update hours: %v", err)
 				}
 				fmt.Printf("🕒 Previous session duration: %s hrs\n", hours)
 			} else {
@@ -92,19 +93,19 @@ var startCmd = &cobra.Command{
 			fmt.Println("🗑️  Previous session ended and logged.")
 		}
 
-		//    Determine bucket
+		// ✅ Determine bucket
 		bucket := bucketFlag
 		if bucket == "" {
 			bucket = meta.Active
 			if bucket == "" {
-				log.Fatalf("  No active bucket found. Use 'timesheet bucket <name>' to set one.")
+				log.Fatalf("❌ No active bucket found. Use 'timesheet bucket <name>' to set one.")
 			}
 		}
 
 		// 🔍 Validate bucket exists in the sheet
 		bucketResp, err := srv.Spreadsheets.Values.Get(spreadsheetID, userSheet+"!C1:Z1").Do()
 		if err != nil {
-			log.Fatalf("  Could not fetch buckets: %v", err)
+			log.Fatalf("❌ Could not fetch buckets: %v", err)
 		}
 
 		valid := false
@@ -117,7 +118,7 @@ var startCmd = &cobra.Command{
 			}
 		}
 		if !valid {
-			log.Fatalf("  Bucket '%s' is not valid. Use 'timesheet bucket' to view available ones.", bucket)
+			log.Fatalf("❌ Bucket '%s' is not valid. Use 'timesheet bucket' to view available ones.", bucket)
 		}
 
 		// ✍️ Prompt for task description
@@ -142,7 +143,7 @@ var startCmd = &cobra.Command{
 		}).ValueInputOption("USER_ENTERED").InsertDataOption("INSERT_ROWS").Do()
 
 		if err != nil {
-			log.Fatalf("  Failed to log new task: %v", err)
+			log.Fatalf("❌ Failed to log new task: %v", err)
 		}
 
 		fmt.Printf("⏱️  Started tracking task: '%s' in bucket '%s'\n", desc, bucket)

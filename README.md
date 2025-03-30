@@ -35,9 +35,10 @@ Everything is backed by **Google Sheets** so your team stays in sync and transpa
 #### 🐧 Linux / 🍎 macOS:
 
 ```bash
-wget https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-linux -O timesheet
+curl -L https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-linux -o timesheet
 chmod +x timesheet
 sudo mv timesheet /usr/local/bin/timesheet
+
 ```
 
 #### 🪟 Windows:
