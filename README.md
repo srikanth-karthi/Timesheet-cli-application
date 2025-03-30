@@ -23,7 +23,7 @@ Everything is backed by **Google Sheets** so your team stays in sync and transpa
 | OS        | Binary Link |
 |-----------|-------------|
 | 🐧 Linux   | [Download `timesheet-linux`](https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-linux) |
-| 🍎 macOS   | [Download `timesheet-mac`](https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-mac) |
+| 🍎 macOS   | [Download `timesheet-mac`](https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-mac-arm64) |
 | 🪟 Windows | [Download `timesheet.exe`](https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet.exe) |
 
 > 🔄 Always grab the latest version from the [Releases Page](https://github.com/srikanth-karthi/Timesheet-cli-application/releases).
@@ -35,10 +35,14 @@ Everything is backed by **Google Sheets** so your team stays in sync and transpa
 #### 🐧 Linux / 🍎 macOS:
 
 ```bash
-curl -L https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-linux -o timesheet
+curl -L https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-mac-arm64 -o timesheet
 chmod +x timesheet
 sudo mv timesheet /usr/local/bin/timesheet
 
+sudo mkdir -p /usr/local/share/zsh/site-functions
+
+# Install the completion script here
+/usr/local/bin/timesheet completion zsh | sudo tee /usr/local/share/zsh/site-functions/_timesheet > /dev/null
 ```
 
 #### 🪟 Windows:
