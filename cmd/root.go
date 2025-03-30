@@ -25,9 +25,6 @@ func Execute() {
 
 func init() {
 
-	// 🧠 Completion behavior
-	rootCmd.CompletionOptions.DisableDefaultCmd = true
-	rootCmd.CompletionOptions.DisableNoDescFlag = true
 
 	// 🌐 Global flags (keep only if needed)
 	rootCmd.PersistentFlags().BoolP("toggle", "t", false, "Help message for toggle")
