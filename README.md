@@ -32,7 +32,7 @@ Everything is backed by **Google Sheets** so your team stays in sync and transpa
 
 ### 🛠️ 2. Install the CLI
 
-#### 🐧 Linux / 🍎 macOS:
+#### 🐧 Linux :
 
 ```bash
 curl -L https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-mac-arm64 -o timesheet
