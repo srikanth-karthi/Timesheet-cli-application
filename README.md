@@ -44,6 +44,12 @@ sudo mkdir -p /usr/local/share/zsh/site-functions
 # Install the completion script here
 /usr/local/bin/timesheet completion zsh | sudo tee /usr/local/share/zsh/site-functions/_timesheet > /dev/null
 ```
+####  🍎 macOS:
+
+```bash
+brew tap srikanth-karthi/tap
+brew install timesheet
+```
 
 #### 🪟 Windows:
 
