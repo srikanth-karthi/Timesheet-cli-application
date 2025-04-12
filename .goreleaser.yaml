@@ -37,8 +37,7 @@ checksum:
   name_template: "checksums.txt"
 
 changelog:
-  use: file
-  file: CHANGELOG.md
+  use: github 
 
 release:
   github:
@@ -47,6 +46,9 @@ release:
 
 brews:
   - name: timesheet
+    repository:
+      owner: srikanth-karthi
+      name: homebrew-tap
     description: "CLI timesheet tracker backed by Google Sheets"
     homepage: "https://github.com/srikanth-karthi/Timesheet-cli-application"
     license: MIT
@@ -56,5 +58,6 @@ brews:
       assert_match "Usage", shell_output("#{bin}/timesheet --help")
     commit_author:
       name: Srikanth K
-      email: srikanth@example.com
-    folder: Formula  # 👈 stores timesheet.rb inside this repo
+      email: srikanthkarthi2003@gmail.com
+
+
