@@ -26,10 +26,8 @@ func Execute() {
 func init() {
 
 
-	// 🌐 Global flags (keep only if needed)
 	rootCmd.PersistentFlags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	//    Register all commands ONCE
 	rootCmd.AddCommand(
 		setupCmd,
 		startCmd,
@@ -39,18 +37,16 @@ func init() {
 		bucketCmd,
 	)
 
-	// 🔧 Subcommands
 	bucketCmd.AddCommand(bucketNewCmd, bucketListCmd)
 
-	// 🏷️ Command-specific flags
 	setupCmd.Flags().BoolVar(&createUser, "create", false, "Create a new user during setup")
 	startCmd.Flags().StringVar(&bucketFlag, "bucket", "", "Bucket to log task in")
 	logCmd.Flags().StringVar(&logTask, "task", "", "Task description (required)")
 	logCmd.Flags().StringVar(&logHours, "hours", "", "Hours spent (required)")
 	logCmd.Flags().StringVar(&logBucket, "bucket", "", "Bucket/project name (optional)")
 	logCmd.Flags().StringVar(&logDate, "date", "", "Date in dd/mm/yy format (optional)")
+	reportCmd.Flags().BoolVarP(&showAll, "all", "a", false, "Show all entries instead of just this week")
 
-	// 🔁 Auto-complete for buckets
 	bucketCmd.ValidArgsFunction = completeBuckets
 }
 

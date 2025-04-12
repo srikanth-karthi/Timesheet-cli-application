@@ -74,20 +74,7 @@ var setupCmd = &cobra.Command{
 				fmt.Println("🚫 Aborting. Existing session still active.")
 				os.Exit(0)
 			}
-		
-			log.Printf("Enter the full path to your project folder (e.g., /Users/you/dev/project):")
-			projectFolderPath, err := reader.ReadString('\n')
-			if err != nil {
-				log.Fatalf("  Failed to read project folder path: %v", err)
-			}
-		
-			meta, _ := internal.LoadMeta()
-			meta.ProjectPath = strings.TrimSpace(projectFolderPath)
-		
-			err = internal.SaveMeta(meta)
-			if err != nil {
-				log.Fatalf("  Failed to save project metadata: %v", err)
-			}
+	
 		
 		} else {
 			ok, err := validateCredentials(srv, spreadsheetID, empID, password)
@@ -176,13 +163,11 @@ func validateCredentials(srv *sheets.Service, spreadsheetID, empID, password str
 }
 
 func createUserInAdmin(srv *sheets.Service, spreadsheetID, empID, password string) error {
-	// Check if empID already exists
 	exists, _ := validateCredentials(srv, spreadsheetID, empID, password)
 	if exists {
 		return fmt.Errorf("user already exists")
 	}
 
-	// Append user row to admin sheet
 	_, err := srv.Spreadsheets.Values.Append(spreadsheetID, "admin!A2:B",
 		&sheets.ValueRange{
 			Values: [][]interface{}{{empID, password}},
@@ -205,7 +190,6 @@ func createUserInAdmin(srv *sheets.Service, spreadsheetID, empID, password strin
 }
 
 func ensureUserSheet(srv *sheets.Service, spreadsheetID, sheetName string) error {
-	// Check if sheet already exists
 	ss, err := srv.Spreadsheets.Get(spreadsheetID).Do()
 	if err != nil {
 		return err
@@ -218,7 +202,6 @@ func ensureUserSheet(srv *sheets.Service, spreadsheetID, sheetName string) error
 		}
 	}
 
-	// Create new sheet for the user
 	_, err = srv.Spreadsheets.BatchUpdate(spreadsheetID, &sheets.BatchUpdateSpreadsheetRequest{
 		Requests: []*sheets.Request{
 			{

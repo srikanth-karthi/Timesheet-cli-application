@@ -30,7 +30,6 @@ var startCmd = &cobra.Command{
 		userSheet := internal.CurrentUserID
 		meta, _ := internal.LoadMeta()
 
-		// 🔄 Check for existing session in local meta
 		if meta.SessionStart != "" {
 			fmt.Printf("⚠️  A session is already running (started at %s).\n", meta.SessionStart)
 			fmt.Print("❓ Do you want to abandon it and start a new session? (yes/no): ")
@@ -93,7 +92,6 @@ var startCmd = &cobra.Command{
 			fmt.Println("🗑️  Previous session ended and logged.")
 		}
 
-		// ✅ Determine bucket
 		bucket := bucketFlag
 		if bucket == "" {
 			bucket = meta.Active
@@ -102,7 +100,6 @@ var startCmd = &cobra.Command{
 			}
 		}
 
-		// 🔍 Validate bucket exists in the sheet
 		bucketResp, err := srv.Spreadsheets.Values.Get(spreadsheetID, userSheet+"!C1:Z1").Do()
 		if err != nil {
 			log.Fatalf("❌ Could not fetch buckets: %v", err)
@@ -121,13 +118,11 @@ var startCmd = &cobra.Command{
 			log.Fatalf("❌ Bucket '%s' is not valid. Use 'timesheet bucket' to view available ones.", bucket)
 		}
 
-		// ✍️ Prompt for task description
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("📝 Task description: ")
 		desc, _ := reader.ReadString('\n')
 		desc = strings.TrimSpace(desc)
 
-		// 🕓 Start new session
 		startTime := time.Now()
 		startTimeRFC := startTime.Format(time.RFC3339)
 		formattedDate := startTime.Format("02/01/06") // dd/mm/yy

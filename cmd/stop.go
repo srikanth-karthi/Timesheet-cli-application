@@ -28,7 +28,6 @@ var stopCmd = &cobra.Command{
 			return
 		}
 
-		//    Parse the session start time
 		oldStartTime, err := time.Parse(time.RFC3339, meta.SessionStart)
 		if err != nil {
 			log.Fatalf("  Invalid session_start time: %v", err)
@@ -39,7 +38,6 @@ var stopCmd = &cobra.Command{
 
 		userSheet := internal.CurrentUserID
 
-		//    Fetch rows from A5:G to find the matching timestamp
 		rowsResp, err := srv.Spreadsheets.Values.Get(spreadsheetID, userSheet+"!A5:G").Do()
 		if err != nil {
 			log.Fatalf("  Failed to read timesheet rows: %v", err)
@@ -74,7 +72,6 @@ var stopCmd = &cobra.Command{
 			fmt.Println("⚠️ Could not find previous session row to log hours.")
 		}
 
-		//    Clear session
 		meta.SessionStart = ""
 		_ = internal.SaveMeta(meta)
 		fmt.Println("   Session cleared.")

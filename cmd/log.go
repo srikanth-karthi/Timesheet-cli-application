@@ -29,7 +29,6 @@ var logCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		//    Required flags check
 		if logTask == "" || logHours == "" {
 			fmt.Println("  Please provide both --task and --hours.")
 			cmd.Usage()
@@ -42,7 +41,6 @@ var logCmd = &cobra.Command{
 		userSheet := internal.CurrentUserID
 		meta, _ := internal.LoadMeta()
 
-		// 🗓️ Use today's date if not provided
 		t := time.Now()
 		if logDate != "" {
 			parsed, err := time.Parse("02/01/06", logDate)
@@ -54,7 +52,6 @@ var logCmd = &cobra.Command{
 		formattedDate := t.Format("02/01/06")
 		day := t.Format("Monday")
 
-		// 📦 Use active bucket if not provided
 		bucket := logBucket
 		if bucket == "" {
 			bucket = meta.Active
@@ -63,7 +60,6 @@ var logCmd = &cobra.Command{
 			}
 		}
 
-		// 🔍 Validate bucket exists
 		bucketResp, err := srv.Spreadsheets.Values.Get(spreadsheetID, userSheet+"!C1:Z1").Do()
 		if err != nil {
 			log.Fatalf("  Could not fetch buckets: %v", err)
@@ -82,7 +78,6 @@ var logCmd = &cobra.Command{
 			log.Fatalf("  Bucket '%s' is not valid. Use 'timesheet bucket' to view available ones.", bucket)
 		}
 
-		// 📝 Append the log row
 		timestamp := time.Now().Format(time.RFC3339)
 		_, err = srv.Spreadsheets.Values.Append(spreadsheetID, userSheet+"!A3:G", &sheets.ValueRange{
 			Values: [][]interface{}{

@@ -8,8 +8,8 @@ import (
 
 var completionCmd = &cobra.Command{
 	Use:   "completion [bash|zsh|fish|powershell]",
-	Short: "Generate completion script",
-	Long: `To load completions:
+	Short: "Generate shell completion script",
+	Long: `To enable shell autocompletion:
 
 Bash:
 
@@ -21,7 +21,7 @@ Zsh:
   $ timesheet completion zsh > "${fpath[1]}/_timesheet"
   $ autoload -U compinit; compinit
 
-fish:
+Fish:
 
   $ timesheet completion fish | source
   $ timesheet completion fish > ~/.config/fish/completions/timesheet.fish
@@ -50,6 +50,4 @@ PowerShell:
 
 func init() {
 	rootCmd.AddCommand(completionCmd)
-
-
 }

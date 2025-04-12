@@ -9,7 +9,6 @@ import (
 type Meta struct {
 	Active       string `json:"active"`
 	SessionStart string `json:"session_start"`
-	ProjectPath  string `json:"project_path"`
 }
 
 var metaPath = filepath.Join(os.Getenv("HOME"), ".timesheet", "meta.json")
