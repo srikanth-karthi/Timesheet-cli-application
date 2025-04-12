@@ -3,30 +3,58 @@ version: 2
 project_name: timesheet
 
 builds:
-  - id: timesheet
+  - id: mac-x64
+    binary: timesheet-mac-x64
     main: ./main.go
-    binary: timesheet
-    goos:
-      - linux
-      - darwin
-      - windows
-    goarch:
-      - amd64
-    env:
-      - CGO_ENABLED=0
-    ldflags:
-      - -s -w -X main.version={{.Version}}
+    goos: [darwin]
+    goarch: [amd64]
+    ldflags: ["-s -w -X main.version={{.Version}}"]
 
-archives: []  # no tar.gz — raw binaries only
+  - id: mac-arm
+    binary: timesheet-mac-arm
+    main: ./main.go
+    goos: [darwin]
+    goarch: [arm64]
+    ldflags: ["-s -w -X main.version={{.Version}}"]
+
+  - id: linux
+    binary: timesheet-linux
+    main: ./main.go
+    goos: [linux]
+    goarch: [amd64]
+    ldflags: ["-s -w -X main.version={{.Version}}"]
+
+  - id: windows
+    binary: timesheet.exe
+    main: ./main.go
+    goos: [windows]
+    goarch: [amd64]
+    ldflags: ["-s -w -X main.version={{.Version}}"]
+
+archives: []
 
 checksum:
   name_template: "checksums.txt"
 
 changelog:
-  use: github
+  use: file
+  file: CHANGELOG.md
 
 release:
   github:
     owner: srikanth-karthi
     name: Timesheet-cli-application
 
+brews:
+  - name: timesheet
+    description: "CLI timesheet tracker backed by Google Sheets"
+    homepage: "https://github.com/srikanth-karthi/Timesheet-cli-application"
+    license: MIT
+    install: |
+      bin.install "timesheet"
+    test: |
+      assert_match "Usage", shell_output("#{bin}/timesheet --help")
+    commit_author:
+      name: Srikanth K
+      email: srikanth@example.com
+    folder: Formula  # 👈 stores timesheet.rb inside this repo
