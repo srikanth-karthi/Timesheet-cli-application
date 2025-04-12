@@ -32,7 +32,7 @@ Everything is backed by **Google Sheets** so your team stays in sync and transpa
 
 ### 🛠️ 2. Install the CLI
 
-#### 🐧 Linux / 🍎 macOS:
+#### 🐧 Linux :
 
 ```bash
 curl -L https://github.com/srikanth-karthi/Timesheet-cli-application/releases/latest/download/timesheet-mac-arm64 -o timesheet
@@ -43,6 +43,12 @@ sudo mkdir -p /usr/local/share/zsh/site-functions
 
 # Install the completion script here
 /usr/local/bin/timesheet completion zsh | sudo tee /usr/local/share/zsh/site-functions/_timesheet > /dev/null
+```
+####  🍎 macOS:
+
+```bash
+brew tap srikanth-karthi/tap
+brew install timesheet
 ```
 
 #### 🪟 Windows:
